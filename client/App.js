@@ -11,10 +11,12 @@ export default function App() {
     "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),
     "Poppins-Medium": require(".//assets/Fonts/Poppins-Medium.ttf"),
   });
+
   if (!fontsLoaded) return null;
+
   return (
     <>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle={"auto"} />
       <NavigationContainer>
         <Provider />
       </NavigationContainer>
@@ -23,16 +25,6 @@ export default function App() {
 }
 
 const Provider = () => {
-  const isLogin = false;
-  return (
-    <>
-      {isLogin ? (
-        <SocketProvider>
-          <MainScreen />
-        </SocketProvider>
-      ) : (
-        <Auth />
-      )}
-    </>
-  );
+  const isLogin = true;
+  return <>{isLogin ? <MainScreen /> : <Auth />}</>;
 };
