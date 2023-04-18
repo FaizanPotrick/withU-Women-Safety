@@ -3,8 +3,8 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CommonStyles from "../../CommonStyles";
 import { Ionicons } from "@expo/vector-icons";
-import AllStories from "./AllStories";
-import MyStories from "./MyStories";
+import AllStories from "./MyStories";
+import MyStories from "./AllStories";
 
 const Story = () => {
   const Tab = createMaterialTopTabNavigator();
