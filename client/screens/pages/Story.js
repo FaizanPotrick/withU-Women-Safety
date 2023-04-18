@@ -3,8 +3,8 @@ import React from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CommonStyles from "../../CommonStyles";
 import { Ionicons } from "@expo/vector-icons";
-import AllStories from "./MyStories";
-import MyStories from "./AllStories";
+import AllStories from "./AllStories";
+import MyStories from "./MyStories";
 
 const Story = () => {
   const Tab = createMaterialTopTabNavigator();
@@ -29,7 +29,7 @@ const Story = () => {
             ),
           }}
           component={AllStories}
-          name="LentTransaction"
+          name="AllStories"
         />
         <Tab.Screen
           options={{
@@ -44,7 +44,7 @@ const Story = () => {
             ),
           }}
           component={MyStories}
-          name="Borrowed"
+          name="MyStories"
         />
       </Tab.Navigator>
     </SafeAreaView>

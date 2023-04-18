@@ -46,7 +46,7 @@ const AllStories = () => {
           <View
             style={{
               ...CommonStyles.card,
-              minHeight: 300,
+              minHeight: 200,
             }}
           >
             <View style={CommonStyles.cardRow}>
@@ -65,7 +65,6 @@ const AllStories = () => {
             >
               Posted By : {item.user.email_address}
             </Text>
-            {(User = "SSSSSS" && <View></View>)}
           </View>
         );
       }}
