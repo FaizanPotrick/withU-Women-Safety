@@ -25,6 +25,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 
+app.use("/api", require("./routes/Administrator"));
+app.use("/api", require("./routes/User"));
+app.use("/api", require("./routes/Active"));
+app.use("/api", require("./routes/SOS"));
+app.use("/api", require("./routes/Story"));
+
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
