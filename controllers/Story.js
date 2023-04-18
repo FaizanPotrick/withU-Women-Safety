@@ -6,7 +6,6 @@ const CreateStory = async (req, res) => {
     await StorySchema.create({
       author_id: user_id,
       title,
-      place,
       description,
     });
     res.send("Successfully Registered");
