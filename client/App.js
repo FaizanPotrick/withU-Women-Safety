@@ -4,7 +4,7 @@ import MainScreen from "./screens/MainScreen";
 import Auth from "./screens/auth/AuthScreen";
 
 export default function App() {
-  const isLogin = true;
+  const isLogin = false;
   return (
     <View style={styles.container}>{isLogin ? <MainScreen /> : <Auth />}</View>
   );
