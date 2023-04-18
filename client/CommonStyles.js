@@ -4,6 +4,9 @@ const Styles = StyleSheet.create({
   bg: {
     backgroundColor: "#7d40ff",
   },
+  container: {
+    flex: 8 / 9,
+  },
   bold: {
     fontFamily: "Poppins-Bold",
     fontWeight: "600",
@@ -55,8 +58,8 @@ const Styles = StyleSheet.create({
   actionButton: {
     alignItems: "center",
     position: "absolute",
-    bottom: 50,
-    right: 20,
+    bottom: 40,
+    right: 40,
     backgroundColor: "#007bff",
     padding: 15,
     borderRadius: 100,
@@ -97,6 +100,11 @@ const Styles = StyleSheet.create({
   outlineGreenBtn: {
     borderColor: "green",
     borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+  },
+  blueBtn: {
+    backgroundColor: "#007bff",
     padding: 10,
     borderRadius: 10,
   },

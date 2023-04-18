@@ -1,225 +1,54 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-  TouchableOpacity,
-  Alert,
-  Modal,
-  Button,
-  SafeAreaView,
-  TextInput,
-  RefreshControl,
-} from "react-native";
+import { View, Text, SafeAreaView, StatusBar, Platform } from "react-native";
+import React from "react";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CommonStyles from "../../CommonStyles";
-import React, { useState, useEffect, useContext } from "react";
-import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
-import axios from "axios";
+import { Ionicons } from "@expo/vector-icons";
+import AllStories from "./AllStories";
+import MyStories from "./MyStories";
 
-const dummyData = [
-  {
-    _id: "1",
-    title: "My First Blog Post",
-    description:
-      "This is my first blog post. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-    user: {
-      _id: "1",
-      email_address: "user1@example.com",
-    },
-  },
-  {
-    _id: "2",
-    title: "My Second Blog Post",
-    description:
-      "This is my second blog post. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-    user: {
-      _id: "2",
-      email_address: "user2@example.com",
-    },
-  },
-];
-
-const Community = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [data, setData] = useState(dummyData);
-  const [newCommunity, setNewCommunity] = useState({
-    title: "",
-    description: "",
-  });
-
+const Story = () => {
+  const Tab = createMaterialTopTabNavigator();
   return (
-    <>
-      <TouchableOpacity
-        style={{ ...CommonStyles.actionButton, zIndex: 1, marginBottom: 80 }}
-        onPress={() => setModalVisible(true)}
+    <SafeAreaView style={{ ...CommonStyles.container }}>
+      <Tab.Navigator
+        style={{
+          paddingTop: Platform.OS === "ios" ? StatusBar.currentHeight : 0,
+        }}
       >
-        <FontAwesomeIcon name="plus" size={30} color="#fff" />
-      </TouchableOpacity>
-      <FlatList
-        refreshControl={
-          <RefreshControl
-            refreshing={false}
-            // onRefresh={() => {
-            //   (async () => {
-            //     setLoading(true);
-            //     try {
-            //       const { data } = await axios.get(
-            //         `${SERVER_URL}/api/community`
-            //       );
-            //       setData(data);
-            //     } catch (err) {
-            //       console.error(err);
-            //       if (err.response) return alert(err.response.data);
-            //       alert(err);
-            //     }
-            //     setLoading(false);
-            //   })();
-            // }}
-          />
-        }
-        keyExtractor={(item, index) => index.toString()}
-        showsVerticalScrollIndicator={false}
-        style={{ padding: 30, marginBottom: 105 }}
-        data={data}
-        renderItem={({ item }) => {
-          return (
-            <View
-              style={{
-                ...CommonStyles.card,
-                minHeight: 300,
-              }}
-            >
-              <View style={CommonStyles.cardRow}>
-                <View>
-                  <Text style={CommonStyles.title}>{item.title}</Text>
-                  <Text style={CommonStyles.silentText}>
-                    {item.description}
-                  </Text>
-                </View>
-              </View>
-              <View style={CommonStyles.divider}></View>
+        <Tab.Screen
+          options={{
+            title: ({ color, focused }) => (
               <Text
                 style={{
-                  ...CommonStyles.silentText,
-                  marginTop: 20,
-                  fontWeight: "bold",
+                  fontWeight: focused ? "bold" : "normal",
+                  paddingHorizontal: 15,
                 }}
               >
-                Posted By : {item.user.email_address}
+                All Stories
               </Text>
-              {
-                (User = "SSSSSS" && (
-                  <View>
-                    <TouchableOpacity
-                      style={{
-                        ...CommonStyles.outlineRedBtn,
-                        width: "100%",
-                        marginTop: 15,
-                      }}
-                      onPress={() => DeleteCommunity(item._id)}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          fontWeight: "bold",
-                          color: "red",
-                        }}
-                      >
-                        Delete
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ))
-              }
-            </View>
-          );
-        }}
-      />
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            backgroundColor: "#00000080",
-            alignItems: "center",
+            ),
           }}
-        >
-          <View
-            style={{
-              backgroundColor: "#fff",
-              padding: 20,
-              width: "85%",
-              borderRadius: 20,
-              elevation: 5,
-              shadowColor: "#c6c6c678",
-              marginVertical: 5,
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-            }}
-          >
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                backgroundColor: "#fff",
-                width: "100%",
-              }}
-            >
-              <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                Add a Blog / Review
-              </Text>
-              <TouchableOpacity
-                style={{ padding: 15, paddingTop: 0 }}
-                onPress={() => setModalVisible(false)}
+          component={AllStories}
+          name="LentTransaction"
+        />
+        <Tab.Screen
+          options={{
+            title: ({ focused, fontWeight }) => (
+              <Text
+                style={{
+                  fontWeight: focused ? "bold" : "normal",
+                }}
               >
-                <FontAwesomeIcon name="close" size={30} color="#000" />
-              </TouchableOpacity>
-            </View>
-            <View>
-              <Text style={{ ...CommonStyles.inputTitle }}>Title</Text>
-              <TextInput
-                style={{ ...CommonStyles.input, marginTop: 10 }}
-                placeholder="Enter Title"
-                onChangeText={(value) =>
-                  setNewCommunity({ ...newCommunity, title: value })
-                }
-              />
-
-              <Text style={{ ...CommonStyles.inputTitle, marginTop: 30 }}>
-                Description
+                My Stories
               </Text>
-              <TextInput
-                style={{ ...CommonStyles.input, marginTop: 10 }}
-                placeholder="Enter Description"
-                onChangeText={(value) =>
-                  setNewCommunity({ ...newCommunity, description: value })
-                }
-              />
-            </View>
-            <TouchableOpacity
-              style={{
-                ...CommonStyles.blueBtn,
-                alignItems: "center",
-                marginTop: 30,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", color: "#fff", padding: 2 }}>
-                Add BLOG
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </>
+            ),
+          }}
+          component={MyStories}
+          name="Borrowed"
+        />
+      </Tab.Navigator>
+    </SafeAreaView>
   );
 };
 
-export default Community;
+export default Story;
