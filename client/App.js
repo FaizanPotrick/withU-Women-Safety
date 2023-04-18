@@ -4,7 +4,10 @@ import { useFonts } from 'expo-font'
 import React, { useContext } from 'react'
 import Auth from './screens/auth/AuthScreen'
 import MainScreen from './screens/MainScreen'
-import StateContext, { StateProvider } from './context/StateContext'
+import StateContext, {
+  StateProvider,
+  SocketProvider,
+} from './context/StateContext'
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -25,5 +28,15 @@ export default function App() {
 
 const Provider = () => {
   const { isLogin } = useContext(StateContext)
-  return <>{isLogin ? <MainScreen /> : <Auth />}</>
+  return (
+    <>
+      {isLogin ? (
+        <SocketProvider>
+          <MainScreen />
+        </SocketProvider>
+      ) : (
+        <Auth />
+      )}
+    </>
+  )
 }
