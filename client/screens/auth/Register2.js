@@ -56,7 +56,6 @@ const Register = ({ route, navigation }) => {
 
   const onSubmit = async () => {
     setLoading(true)
-
     try {
       const { data } = await axios.post(`${SERVER_URL}/api/register`, {
         name: register.name,

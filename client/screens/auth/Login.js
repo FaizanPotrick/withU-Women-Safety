@@ -6,42 +6,42 @@ import {
   SafeAreaView,
   KeyboardAvoidingView,
   Platform,
-} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useState, useContext } from 'react'
-import axios from 'axios'
-import Styles from '../../CommonStyles'
-import StateContext from '../../context/StateContext'
-import { SERVER_URL } from '../../config'
+} from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useContext } from "react";
+import axios from "axios";
+import Styles from "../../CommonStyles";
+import StateContext from "../../context/StateContext";
+import { SERVER_URL } from "../../config";
 
 const Login = ({ navigation }) => {
-  const { setIsLogin, setLoading } = useContext(StateContext)
+  const { setIsLogin, setLoading } = useContext(StateContext);
   const [login, setLogin] = useState({
-    email_address: '',
-    password: '',
-  })
+    email_address: "",
+    password: "",
+  });
 
   const onSubmit = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const { data } = await axios.put(`${SERVER_URL}/api/login`, login)
-      await AsyncStorage.setItem('user', JSON.stringify(data))
-      setLogin({ email_address: '', password: '' })
-      setIsLogin(true)
+      const { data } = await axios.put(`${SERVER_URL}/api/login`, login);
+      await AsyncStorage.setItem("user", JSON.stringify(data));
+      setLogin({ email_address: "", password: "" });
+      setIsLogin(true);
     } catch (err) {
-      console.error(err)
-      if (err.response) return alert(err.response.data)
-      alert(err)
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <SafeAreaView style={{ width: '100%', maxWidth: 500 }}>
+      <SafeAreaView style={{ width: "100%", maxWidth: 500 }}>
         <Text style={[Styles.bold, styles.title]}>withU</Text>
         <TextInput
           style={styles.input}
@@ -68,11 +68,11 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={{ marginTop: 10 }}
-          onPress={() => navigation.navigate('register')}
+          onPress={() => navigation.navigate("register")}
         >
           <Text
             style={{
-              textAlign: 'center',
+              textAlign: "center",
               fontFamily: Styles.medium.fontFamily,
             }}
           >
@@ -81,19 +81,19 @@ const Login = ({ navigation }) => {
         </TouchableOpacity>
       </SafeAreaView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     padding: 40,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   title: {
     fontSize: 60,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 50,
   },
   input: {
@@ -102,14 +102,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
   },
   buttonText: {
-    color: '#fff',
-    textAlign: 'center',
+    color: "#fff",
+    textAlign: "center",
     fontFamily: Styles.bold.fontFamily,
     fontSize: 18,
   },
-})
+});
 
-export default Login
+export default Login;
