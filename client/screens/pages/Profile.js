@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import StateContext from "../../context/StateContext";
 import { SERVER_URL } from "../../config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
   const { User, setLoading } = useContext(StateContext);
@@ -23,7 +24,54 @@ const Profile = () => {
     emergency_contact2: "",
   });
 
-  const keyboardVerticalOffset = Platform.OS === "ios" ? "130" : 0;
+  const getUserData = async () => {
+    setLoading(true);
+    try {
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/user/${User.user_id}`
+      );
+      setUser({
+        name: data.name,
+        emergency_contact1: data.emergency_contact[0],
+        emergency_contact2: data.emergency_contact[1],
+      });
+      const userStorage = await JSON.parse(await AsyncStorage.getItem("user"));
+      console.log(userStorage);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+    setLoading(false);
+  };
+
+  const updateProfile = async () => {
+    setLoading(true);
+    try {
+      await axios.put(`${SERVER_URL}/api/user/${User.user_id}`, {
+        name: user.name,
+        emergency_contact: [user.emergency_contact1, user.emergency_contact2],
+      });
+      const userStorage = await JSON.parse(await AsyncStorage.getItem("user"));
+      await AsyncStorage.setItem(
+        "user",
+        JSON.stringify({
+          ...userStorage,
+          emergency_contact: [user.emergency_contact1, user.emergency_contact2],
+        })
+      );
+      Alert.alert("Success", "Profile updated successfully");
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const keyboardVerticalOffset = Platform.OS === "ios" ? 130 : 0;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -80,6 +128,7 @@ const Profile = () => {
               />
             </View>
             <TouchableOpacity
+              onPress={updateProfile}
               style={{
                 backgroundColor: "#f75459",
                 padding: 20,
