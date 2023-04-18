@@ -9,10 +9,11 @@ import {
 } from "react-native";
 import { Audio } from "expo-av";
 import StateContext from "../../context/StateContext";
+import call from "react-native-phone-call";
 import CommonStyles from "../../CommonStyles";
 
 const SOS = () => {
-  const { Logout } = useContext(StateContext);
+  const { socket, Logout, User, isSocketConnected } = useContext(StateContext);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSOS, setIsSOS] = useState(false);
@@ -143,7 +144,12 @@ const SOS = () => {
               justifyContent: "center",
               marginVertical: 5,
             }}
-            onPress={() => null}
+            onPress={() =>
+              call({
+                number: User.emergency_contact[0],
+                prompt: true,
+              }).catch(console.error)
+            }
           >
             <Text style={styles.onlySosButtonText}>Emergency Call</Text>
           </TouchableOpacity>
