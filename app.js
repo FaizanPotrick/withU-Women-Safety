@@ -1,9 +1,10 @@
 require("dotenv").config();
 require("events").EventEmitter.defaultMaxListeners = 100;
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
+const express = require("express");
+const socket = require("./socket");
+const cors = require("cors");
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -34,6 +35,8 @@ app.use("/api", require("./routes/Story"));
 app.get("/", (req, res) => {
   res.send("Hello World!");
 });
+
+socket(http);
 
 http.listen(port, () => {
   console.log(`Listening on port ${port}`);
