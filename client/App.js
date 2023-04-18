@@ -1,20 +1,38 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
-import MainScreen from "./screens/MainScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import { StatusBar } from "react-native";
+import { useFonts } from "expo-font";
+import React from "react";
 import Auth from "./screens/auth/AuthScreen";
+import MainScreen from "./screens/MainScreen";
 
 export default function App() {
-  const isLogin = false;
+  const [fontsLoaded] = useFonts({
+    "Poppins-Bold": require("./assets/Fonts/Poppins-Bold.ttf"),
+    "Poppins-Thin": require(".//assets/Fonts/Poppins-Thin.ttf"),
+    "Poppins-Medium": require(".//assets/Fonts/Poppins-Medium.ttf"),
+  });
+  if (!fontsLoaded) return null;
   return (
-    <View style={styles.container}>{isLogin ? <MainScreen /> : <Auth />}</View>
+    <>
+      <StatusBar barStyle={"light-content"} />
+      <NavigationContainer>
+        <Provider />
+      </NavigationContainer>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+const Provider = () => {
+  const isLogin = false;
+  return (
+    <>
+      {isLogin ? (
+        <SocketProvider>
+          <MainScreen />
+        </SocketProvider>
+      ) : (
+        <Auth />
+      )}
+    </>
+  );
+};

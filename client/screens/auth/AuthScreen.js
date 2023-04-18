@@ -1,8 +1,36 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import GetStarted from "./GetStarted";
+import Register from "./Register";
+import Register2 from "./Register2";
+import Login from "./Login";
 
-function AuthScreen() {
-  return <Text>AuthScreen</Text>;
-}
+const AuthScreen = () => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
+        name="home"
+        component={GetStarted}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="register"
+        component={Register}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="register2"
+        options={{ headerShown: false }}
+        component={Register2}
+      />
+      <Stack.Screen
+        name="login"
+        options={{ headerShown: false }}
+        component={Login}
+      />
+    </Stack.Navigator>
+  );
+};
 
 export default AuthScreen;
