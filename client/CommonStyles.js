@@ -38,7 +38,7 @@ const Styles = StyleSheet.create({
     paddingHorizontal: 40,
   },
   card: {
-    marginBottom: 30,
+    marginBottom: 40,
     backgroundColor: "white",
     padding: 25,
     borderRadius: 15,
@@ -50,11 +50,12 @@ const Styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
-    justifyContent: "center",
+    justifyContent: "space-between",
   },
   silentText: {
     color: "#8e8e8e",
     fontSize: 13,
+    marginTop: 5,
   },
   cardRow: {
     flexDirection: "row",
