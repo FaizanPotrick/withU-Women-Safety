@@ -23,10 +23,13 @@ const Profile = () => {
     emergency_contact2: "",
   });
 
+  const keyboardVerticalOffset = Platform.OS === "ios" ? "130" : 0;
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior="position"
+        keyboardVerticalOffset={keyboardVerticalOffset}
         style={{ width: "100%" }}
       >
         <ScrollView style={{ width: "100%" }}>
