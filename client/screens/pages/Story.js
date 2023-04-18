@@ -29,7 +29,7 @@ const Story = () => {
             ),
           }}
           component={AllStories}
-          name="LentTransaction"
+          name="AllStories"
         />
         <Tab.Screen
           options={{
@@ -44,7 +44,7 @@ const Story = () => {
             ),
           }}
           component={MyStories}
-          name="Borrowed"
+          name="MyStories"
         />
       </Tab.Navigator>
     </SafeAreaView>
