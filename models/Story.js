@@ -15,15 +15,6 @@ const StorySchema = new Schema(
       ],
       required: [true, "Please add a Title"],
     },
-    place: {
-      type: String,
-      trim: true,
-      match: [
-        /^[a-zA-Z0-9 ]+$/,
-        (props) => `${props.value} is not a valid place`,
-      ],
-      required: [true, "Please add a Place"],
-    },
     description: {
       type: String,
       trim: true,

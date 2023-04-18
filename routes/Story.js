@@ -13,7 +13,6 @@ router.post(
   "/register/story",
   body("user_id").not().isEmpty().withMessage("User ID is required"),
   body("title").not().isEmpty().withMessage("Title is required"),
-  body("place").not().isEmpty().withMessage("Place is required"),
   body("description").not().isEmpty().withMessage("Description is required"),
   CreateStory
 );
