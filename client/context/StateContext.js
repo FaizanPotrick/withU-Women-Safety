@@ -1,8 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useState, useEffect, createContext, useContext } from 'react'
-// import * as Location from 'expo-location'
-// import io from 'socket.io-client'
-// import { SERVER_URL } from '../config'
 
 const StateContext = createContext()
 export default StateContext
@@ -27,11 +24,12 @@ export const StateProvider = ({ children }) => {
     })()
   }, [isLogin])
 
-  //   const Logout = async () => {
-  //     await AsyncStorage.removeItem('user')
-  //     setUser(null)
-  //     setIsLogin(false)
-  //   }
+  const Logout = async () => {
+    await AsyncStorage.removeItem('user')
+    console.log('logout')
+    setUser(null)
+    setIsLogin(false)
+  }
 
   return (
     <StateContext.Provider
@@ -42,86 +40,10 @@ export const StateProvider = ({ children }) => {
         setIsLogin,
         User,
         setUser,
+        Logout,
       }}
     >
       {children}
     </StateContext.Provider>
   )
 }
-
-// export const SocketProvider = ({ children }) => {
-//   const { Logout, User, setUser, loading, setLoading } = useContext(
-//     StateContext,
-//   )
-
-//   const [socket] = useState(() =>
-//     io(SERVER_URL, {
-//       transports: ['websocket'],
-//     }),
-//   )
-//   const [location, setLocation] = useState(null)
-//   const [isSocketConnected, setIsSocketConnected] = useState(false)
-
-//   useEffect(() => {
-//     socket.on('connect', async () => {
-//       const user = await JSON.parse(await AsyncStorage.getItem('user'))
-//       setUser(user)
-//       socket.emit('Set_User_ID', user.user_id)
-//       setIsSocketConnected(true)
-//       console.log('connected')
-//     })
-//     socket.on('connect_error', (err) => {
-//       console.log(err)
-//     })
-//     socket.on('disconnect', () => {
-//       setIsSocketConnected(false)
-//       console.log('disconnected')
-//     })
-//     return () => {
-//       socket.off('connect')
-//       socket.off('connect_error')
-//       socket.off('disconnect')
-//     }
-//   }, [])
-
-//   useEffect(() => {
-//     if (!isSocketConnected) return
-//     ;(async () => {
-//       const subscription = await Location.watchPositionAsync(
-//         {
-//           accuracy: Location.Accuracy.High,
-//           timeInterval: 5000,
-//           distanceInterval: 20,
-//         },
-//         ({ coords }) => {
-//           setLocation({
-//             latitude: coords.latitude,
-//             longitude: coords.longitude,
-//           })
-//           socket.emit('Set_Active_User', {
-//             latitude: coords.latitude,
-//             longitude: coords.longitude,
-//           })
-//           console.log('location updated')
-//         },
-//       )
-//       return () => subscription.remove()
-//     })()
-//   }, [isSocketConnected])
-
-//   return (
-//     <StateContext.Provider
-//       value={{
-//         socket,
-//         location,
-//         User,
-//         Logout,
-//         setLoading,
-//         loading,
-//         isSocketConnected,
-//       }}
-//     >
-//       {children}
-//     </StateContext.Provider>
-//   )
-// }

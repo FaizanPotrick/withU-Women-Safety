@@ -25,7 +25,6 @@ const Login = ({ navigation }) => {
     setLoading(true)
     try {
       const { data } = await axios.put(`${SERVER_URL}/api/login`, login)
-      console.log(data)
       await AsyncStorage.setItem('user', JSON.stringify(data))
       setLogin({ email_address: '', password: '' })
       setIsLogin(true)
