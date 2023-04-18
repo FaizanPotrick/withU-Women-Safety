@@ -17,7 +17,7 @@ import { SERVER_URL } from "../../config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
-  const { User, setLoading } = useContext(StateContext);
+  const { setLoading } = useContext(StateContext);
   const [user, setUser] = useState({
     name: "",
     emergency_contact1: "",
@@ -27,6 +27,7 @@ const Profile = () => {
   const getUserData = async () => {
     setLoading(true);
     try {
+      const User = await JSON.parse(await AsyncStorage.getItem("user"));
       const { data } = await axios.get(
         `${SERVER_URL}/api/user/${User.user_id}`
       );
@@ -35,11 +36,10 @@ const Profile = () => {
         emergency_contact1: data.emergency_contact[0],
         emergency_contact2: data.emergency_contact[1],
       });
-      const userStorage = await JSON.parse(await AsyncStorage.getItem("user"));
-      console.log(userStorage);
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
     setLoading(false);
   };
@@ -47,22 +47,23 @@ const Profile = () => {
   const updateProfile = async () => {
     setLoading(true);
     try {
+      const User = await JSON.parse(await AsyncStorage.getItem("user"));
       await axios.put(`${SERVER_URL}/api/user/${User.user_id}`, {
         name: user.name,
         emergency_contact: [user.emergency_contact1, user.emergency_contact2],
       });
-      const userStorage = await JSON.parse(await AsyncStorage.getItem("user"));
       await AsyncStorage.setItem(
         "user",
         JSON.stringify({
-          ...userStorage,
+          ...User,
           emergency_contact: [user.emergency_contact1, user.emergency_contact2],
         })
       );
       Alert.alert("Success", "Profile updated successfully");
     } catch (error) {
-      console.log(error);
-      alert(error);
+      console.error(err);
+      if (err.response) return alert(err.response.data);
+      alert(err);
     }
     setLoading(false);
   };
