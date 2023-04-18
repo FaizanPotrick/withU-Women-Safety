@@ -1,39 +1,14 @@
 import MapView, { Circle, Marker } from 'react-native-maps'
 import React, { useState, useEffect, useContext, useRef } from 'react'
 import { View, Text, Image, TouchableOpacity } from 'react-native'
-// import StateContext from '../../context/StateContext'
-// import { SERVER_URL } from '../../config'
 
 const Map = () => {
-  // const { socket, setLoading, location, User } = useContext(StateContext)
-  // const [activeUsers, setActiveUsers] = useState([])
-  const [PoliceInfo, setPoliceInfo] = useState([])
-  const [SOSInfo, setSOSInfo] = useState([])
-  const [location, setLocation] = useState(null)
-
-  // const Fetch_Active_Users = async () => {
-  //   const { data } = await axios.get(`${SERVER_URL}/api/active/location`)
-  //   setActiveUsers(data)
-  // }
-
-  // useEffect(() => {
-  //   setLoading(true)
-  //   Fetch_Active_Users()
-  //   setLoading(false)
-  // }, [socket.connected])
-
-  // useEffect(() => {
-  //   ;(async () => {
-  //     try {
-  //       const { data } = await axios.get(`${SERVER_URL}/api/police_sos`)
-  //       setPoliceInfo(data.police_response)
-  //       setSOSInfo(data.sos_response)
-  //     } catch (error) {
-  //       console.log(error)
-  //       alert(error)
-  //     }
-  //   })()
-  // }, [socket.connected])
+  const [location, setLocation] = useState([
+    {
+      latitude: 18.9319194,
+      longitude: 73.1615285,
+    },
+  ])
 
   const mapViewRef = useRef(null)
 
@@ -46,15 +21,6 @@ const Map = () => {
     })
   }
 
-  // useEffect(() => {
-  //   socket.on('Update_Active_Users', () => {
-  //     Fetch_Active_Users()
-  //   })
-  //   return () => {
-  //     socket.off('Update_Active_Users')
-  //   }
-  // }, [socket.connected])
-
   return (
     <View
       style={{
@@ -63,7 +29,6 @@ const Map = () => {
         justifyContent: 'center',
       }}
     >
-      (
       <>
         <TouchableOpacity
           style={{
@@ -108,91 +73,8 @@ const Map = () => {
             longitudeDelta: 0.01,
           }}
           provider="google"
-        >
-          {activeUsers.map((user, index) => {
-            return (
-              <Marker
-                key={index}
-                coordinate={user.coordinates}
-                opacity={user.user_id === User.user_id ? 1 : 0.6}
-                pinColor="red"
-              >
-                <View
-                  style={{
-                    borderWidth: 2,
-                    borderColor: 'black',
-                    borderRadius: 40,
-                  }}
-                >
-                  <Image
-                    source={require('../../assets/icons/woman.png')}
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  />
-                </View>
-              </Marker>
-
-              // <Marker
-              //   key={index}
-              //   coordinate={user.coordinates}
-              //   opacity={user.user_id === User.user_id ? 1 : 0.6}
-              // >
-              //   <Image
-              //     source={require('../../assets/placeholder.png')}
-              //     style={{ width: 40, height: 40 }}
-              //     resizeMode="contain"
-              //   />
-              // </Marker>
-            )
-          })}
-          {PoliceInfo.map((police, index) => {
-            console.log(police.type_of_user)
-            return (
-              <Marker
-                key={index}
-                title={police.branch_name}
-                coordinate={police.coordinates}
-              >
-                <View
-                  style={{
-                    borderWidth: 2,
-                    borderColor: 'black',
-                    borderRadius: 40,
-                  }}
-                >
-                  <Image
-                    source={
-                      police.type_of_user === 'police'
-                        ? require('../../assets/icons/police.png')
-                        : require('../../assets/icons/hospital.png')
-                    }
-                    style={{ width: 40, height: 40 }}
-                    resizeMode="contain"
-                  />
-                </View>
-              </Marker>
-            )
-          })}
-          {SOSInfo.map((sos, index) => {
-            return (
-              <Circle
-                center={sos.coordinates}
-                radius={120}
-                fillColor={'rgba(255,0,0,0.05)'}
-                strokeColor={'rgba(255,0,0,0.0)'}
-                strokeWidth={0}
-                key={index}
-              />
-            )
-          })}
-          <Circle
-            center={location}
-            radius={3000}
-            fillColor={'rgba(0,0,0,0.1)'}
-          />
-        </MapView>
+        ></MapView>
       </>
-      )
     </View>
   )
 }
