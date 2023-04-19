@@ -5,7 +5,7 @@ import MainScreens from "./pages/MainScreen/Mainscreens.js";
 import Auth from "./pages/auth/Auth.js";
 
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   return (
     <div className="App">
       <BrowserRouter>
