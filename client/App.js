@@ -19,7 +19,7 @@ export default function App() {
   if (!fontsLoaded) return null;
   return (
     <StateProvider>
-      <StatusBar barStyle={"light-content"} />
+      <StatusBar barStyle={"auto"} />
       <NavigationContainer>
         <Provider />
       </NavigationContainer>

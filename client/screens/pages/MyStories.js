@@ -30,7 +30,6 @@ const MyStories = () => {
 
   const handleSubmit = async () => {
     const User = await JSON.parse(await AsyncStorage.getItem("user"));
-    console.log(User);
     const newStory = {
       title: story.title,
       description: story.description,
@@ -83,6 +82,20 @@ const MyStories = () => {
         <FontAwesomeIcon name="plus" size={30} color="#fff" />
       </TouchableOpacity>
       <View>
+        {data.length === 0 && (
+          <View style={{ marginTop: 100 }}>
+            <Text
+              style={{
+                ...CommonStyles.medium,
+                textAlign: "center",
+                fontSize: 20,
+                color: "gray",
+              }}
+            >
+              No Stories Found
+            </Text>
+          </View>
+        )}
         <FlatList
           refreshControl={
             <RefreshControl refreshing={false} onRefresh={GetMyStories} />

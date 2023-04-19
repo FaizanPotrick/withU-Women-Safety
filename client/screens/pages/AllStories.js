@@ -29,46 +29,62 @@ const AllStories = () => {
   }
 
   return (
-    <FlatList
-      refreshControl={
-        <RefreshControl refreshing={loading} onRefresh={GetAllStories} />
-      }
-      keyExtractor={(item, index) => index.toString()}
-      showsVerticalScrollIndicator={false}
-      style={{ padding: 30 }}
-      data={data}
-      renderItem={({ item }) => {
-        return (
-          <View
+    <>
+      {data.length === 0 && (
+        <View style={{ marginTop: 100 }}>
+          <Text
             style={{
-              ...CommonStyles.card,
-              minHeight: 200,
+              ...CommonStyles.medium,
+              textAlign: "center",
+              fontSize: 20,
+              color: "gray",
             }}
           >
-            <View style={CommonStyles.cardRow}>
-              <View>
-                <Text style={CommonStyles.title}>{item.title}</Text>
-                <View>
-                  <Text style={CommonStyles.silentText}>
-                    {item.description}
-                  </Text>
-                </View>
-              </View>
-            </View>
-            <View style={CommonStyles.divider}></View>
-            <Text
+            No Stories Found
+          </Text>
+        </View>
+      )}
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={GetAllStories} />
+        }
+        keyExtractor={(item, index) => index.toString()}
+        showsVerticalScrollIndicator={false}
+        style={{ padding: 30 }}
+        data={data}
+        renderItem={({ item }) => {
+          return (
+            <View
               style={{
-                ...CommonStyles.silentText,
-                marginTop: 20,
-                fontWeight: "bold",
+                ...CommonStyles.card,
+                minHeight: 200,
               }}
             >
-              Posted By : {item.user.email_address}
-            </Text>
-          </View>
-        );
-      }}
-    />
+              <View style={CommonStyles.cardRow}>
+                <View>
+                  <Text style={CommonStyles.title}>{item.title}</Text>
+                  <View>
+                    <Text style={CommonStyles.silentText}>
+                      {item.description}
+                    </Text>
+                  </View>
+                </View>
+              </View>
+              <View style={CommonStyles.divider}></View>
+              <Text
+                style={{
+                  ...CommonStyles.silentText,
+                  marginTop: 20,
+                  fontWeight: "bold",
+                }}
+              >
+                Posted By : {item.user.email_address}
+              </Text>
+            </View>
+          );
+        }}
+      />
+    </>
   );
 };
 
