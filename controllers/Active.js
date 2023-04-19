@@ -13,12 +13,13 @@ const GetAllActiveLocation = async (req, res) => {
 };
 
 const GetMeterActiveLocation = async (req, res) => {
+  const { user_id } = req.params;
   try {
     const users = await JSON.parse(fs.readFileSync("./cache.json"));
     const closest_users = Object.values(users)
       .map((user) => {
         const distance = geolib.getDistance(
-          users[socket.user_id].coordinates,
+          users[user_id].coordinates,
           user.coordinates
         );
         if (distance <= METER_RADIUS) {

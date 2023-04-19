@@ -8,7 +8,7 @@ const {
 const router = express.Router();
 
 router.get("/active/location", GetAllActiveLocation);
-router.get("/active/location/meter", GetMeterActiveLocation);
+router.get("/active/location/meter/:user_id", GetMeterActiveLocation);
 router.get("/active/location/:user_id", GetUserLocation);
 
 module.exports = router;
