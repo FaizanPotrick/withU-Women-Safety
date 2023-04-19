@@ -23,6 +23,7 @@ const Profile = () => {
     emergency_contact1: "",
     emergency_contact2: "",
   });
+  const { Logout } = useContext(StateContext);
 
   const getUserData = async () => {
     setLoading(true);
@@ -81,7 +82,7 @@ const Profile = () => {
         keyboardVerticalOffset={keyboardVerticalOffset}
         style={{ width: "100%" }}
       >
-        <ScrollView style={{ width: "100%" }}>
+        <ScrollView style={{ width: "100%", marginBottom: 80 }}>
           <View style={styles.avatar}>
             <Image
               source={require("../../assets/icons/user.png")}
@@ -147,6 +148,28 @@ const Profile = () => {
                 }}
               >
                 Update
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={Logout}
+              style={{
+                borderWidth: 2,
+                borderColor: "#f75459",
+                padding: 20,
+                borderRadius: 20,
+                width: "80%",
+                marginTop: 20,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#f75459",
+                  fontSize: 18,
+                  textAlign: "center",
+                  fontWeight: "bold",
+                }}
+              >
+                Logout
               </Text>
             </TouchableOpacity>
           </View>
