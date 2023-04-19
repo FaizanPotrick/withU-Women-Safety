@@ -3,7 +3,7 @@ import { Grid } from "@mantine/core";
 import Sidebar from "../../components/SideBar";
 import { Routes, Route, Navigate } from "react-router-dom";
 import AllSOS from "../AllSos";
-import Statistics from "../Statistics";
+import Complaints from "../Complaints";
 import Profile from "./Profile";
 
 const Dashboard = ({ setIsLogin }) => {
@@ -20,7 +20,7 @@ const Dashboard = ({ setIsLogin }) => {
             <Route path="/login" element={<Navigate to="/sos" />} />
             <Route path="/sos" element={<AllSOS />} />
             <Route path="/profile" element={<Profile />} />
-            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/complaints" element={<Complaints />} />
           </Routes>
         </Grid.Col>
       </Grid>
