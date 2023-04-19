@@ -1,4 +1,4 @@
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Circle } from "react-native-maps";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import StateContext from "../../context/StateContext";
@@ -155,7 +155,7 @@ const Map = () => {
                   >
                     <Image
                       source={
-                        police.type_of_user === "police"
+                        administrator.type_of_user === "police"
                           ? require("../../assets/policeman.png")
                           : require("../../assets/icons/hospital.png")
                       }
