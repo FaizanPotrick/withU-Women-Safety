@@ -8,6 +8,8 @@ import { SERVER_URL } from "../../config";
 const Map = () => {
   const { socket, setLoading, location, User } = useContext(StateContext);
   const [activeUsers, setActiveUsers] = useState([]);
+  const [AdministratorInfo, setAdministratorInfo] = useState([]);
+  const [SOSInfo, setSOSInfo] = useState([]);
 
   const Fetch_Active_Users = async () => {
     try {
@@ -24,6 +26,19 @@ const Map = () => {
     setLoading(true);
     Fetch_Active_Users();
     setLoading(false);
+  }, [socket.connected]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { data } = await axios.get(`${SERVER_URL}/api/administrator_sos`);
+        setAdministratorInfo(data.administrator_response);
+        setSOSInfo(data.sos_response);
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    })();
   }, [socket.connected]);
 
   const mapViewRef = useRef(null);
@@ -124,6 +139,50 @@ const Map = () => {
                 </Marker>
               );
             })}
+            {AdministratorInfo.map((administrator, index) => {
+              return (
+                <Marker
+                  key={index}
+                  title={administrator.branch_name}
+                  coordinate={administrator.coordinates}
+                >
+                  <View
+                    style={{
+                      borderWidth: 2,
+                      borderColor: "black",
+                      borderRadius: 40,
+                    }}
+                  >
+                    <Image
+                      source={
+                        police.type_of_user === "police"
+                          ? require("../../assets/policeman.png")
+                          : require("../../assets/icons/hospital.png")
+                      }
+                      style={{ width: 40, height: 40 }}
+                      resizeMode="contain"
+                    />
+                  </View>
+                </Marker>
+              );
+            })}
+            {SOSInfo.map((sos, index) => {
+              return (
+                <Circle
+                  center={sos.coordinates}
+                  radius={120}
+                  fillColor={"rgba(255,0,0,0.05)"}
+                  strokeColor={"rgba(255,0,0,0.0)"}
+                  strokeWidth={0}
+                  key={index}
+                />
+              );
+            })}
+            <Circle
+              center={location}
+              radius={3000}
+              fillColor={"rgba(0,0,0,0.1)"}
+            />
           </MapView>
         </>
       ) : (
