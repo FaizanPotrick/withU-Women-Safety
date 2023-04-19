@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const socket = require("./socket");
 const cors = require("cors");
+const test_model = require("./chatbot/test_model");
 
 const port = process.env.PORT || 8000;
 const app = express();
@@ -31,6 +32,12 @@ app.use("/api", require("./routes/User"));
 app.use("/api", require("./routes/Active"));
 app.use("/api", require("./routes/SOS"));
 app.use("/api", require("./routes/Story"));
+app.use("/api", require("./routes/AnonymousAlert"));
+app.get("/api/chatbot/:message", async (req, res) => {
+  const { message } = req.params;
+  const response = await test_model(message);
+  res.json(response);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

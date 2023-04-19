@@ -13,7 +13,9 @@ const Map = () => {
 
   const Fetch_Active_Users = async () => {
     try {
-      const { data } = await axios.get(`${SERVER_URL}/api/active/location`);
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/active/location/meter/${User.user_id}`
+      );
       setActiveUsers(data);
     } catch (err) {
       console.error(err);
