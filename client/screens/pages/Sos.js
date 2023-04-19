@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
+import { Accelerometer } from "expo-sensors";
 
 import { Audio } from "expo-av";
 import Styles from "../../CommonStyles";
@@ -22,6 +23,10 @@ const SOS = () => {
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSOS, setIsSOS] = useState(false);
+
+  const [shakeCount, setShakeCount] = useState(0);
+  const [lastShakeTimestamp, setLastShakeTimestamp] = useState(0);
+  const [isShaking, setIsShaking] = useState(false);
 
   const [accepted_count, setAccepted_count] = useState(0);
 
@@ -123,6 +128,36 @@ const SOS = () => {
       SendSMS(emergency_contact, message);
     });
   };
+
+  useEffect(() => {
+    const subscription = Accelerometer.addListener((accelerometerData) => {
+      const { x, y, z } = accelerometerData;
+      const acceleration = Math.sqrt(x * x + y * y + z * z);
+      const now = Date.now();
+
+      if (acceleration > 1.2) {
+        if (!isShaking) {
+          setIsShaking(true);
+          setShakeCount(1);
+          setLastShakeTimestamp(now);
+        } else if (shakeCount < 6 && now - lastShakeTimestamp < 500) {
+          setShakeCount(shakeCount + 1);
+          setLastShakeTimestamp(now);
+        } else if (shakeCount >= 6) {
+          setIsShaking(false);
+          setShakeCount(0);
+          setLastShakeTimestamp(0);
+          if (!isSOS) return OnSOS("general");
+        }
+      } else {
+        setIsShaking(false);
+        setShakeCount(0);
+        setLastShakeTimestamp(0);
+      }
+    });
+    Accelerometer.setUpdateInterval(16);
+    return () => subscription.remove();
+  }, [isShaking, shakeCount, lastShakeTimestamp]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
