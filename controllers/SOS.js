@@ -4,12 +4,12 @@ const SOSSchema = require("../models/SOS");
 
 const GetMarkers = async (req, res) => {
   try {
-    const police_response = await AdministratorSchema.find().lean();
+    const administrator_response = await AdministratorSchema.find().lean();
     const sos_response = await SOSSchema.find({
       status: "resolved",
     }).lean();
     res.json({
-      police_response,
+      administrator_response,
       sos_response,
     });
   } catch (err) {
