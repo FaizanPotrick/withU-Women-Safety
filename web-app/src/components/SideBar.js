@@ -91,7 +91,7 @@ const useStyles = createStyles((theme) => ({
 
 const data = [
   { link: "/sos", label: "SOS", icon: IconSos },
-  // { link: "/statistics", label: "Statistics", icon: IconChartInfographic },
+  { link: "/Complaints", label: "Complaint", icon: IconChartInfographic },
   // { link: "/profile", label: "Profile", icon: IconUserCircle },
   // { link: "/we", label: "Other Settings", icon: IconSettings },
 ];
