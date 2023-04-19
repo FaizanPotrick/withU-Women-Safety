@@ -10,7 +10,7 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get("/police_sos", GetMarkers);
+router.get("/administrator_sos", GetMarkers);
 router.get("/sos_accepted_count/:user_id", SOSAcceptedCount);
 router.get("/is_sos/:user_id", IsSOS);
 router.get("/sos/accepted/:sos_id", GetAcceptedUserDetails);

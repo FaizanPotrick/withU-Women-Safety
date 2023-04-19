@@ -7,18 +7,73 @@ import {
   SafeAreaView,
   Image,
 } from "react-native";
+import { Accelerometer } from "expo-sensors";
+
 import { Audio } from "expo-av";
-import StateContext from "../../context/StateContext";
+import Styles from "../../CommonStyles";
+import * as SMS from "expo-sms";
 import call from "react-native-phone-call";
-import CommonStyles from "../../CommonStyles";
+import StateContext from "../../context/StateContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
+import { SERVER_URL } from "../../config";
 
 const SOS = () => {
-  const { socket, Logout, isSocketConnected } = useContext(StateContext);
+  const { socket, Logout, User, isSocketConnected } = useContext(StateContext);
   const [sound, setSound] = useState();
   const [isPlaying, setIsPlaying] = useState(false);
   const [isSOS, setIsSOS] = useState(false);
+
+  const [shakeCount, setShakeCount] = useState(0);
+  const [lastShakeTimestamp, setLastShakeTimestamp] = useState(0);
+  const [isShaking, setIsShaking] = useState(false);
+
   const [accepted_count, setAccepted_count] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const user = await JSON.parse(await AsyncStorage.getItem("user"));
+        const { data } = await axios.get(
+          `${SERVER_URL}/api/sos_accepted_count/${user.user_id}`
+        );
+        setAccepted_count(data);
+      } catch (error) {
+        console.log(error);
+        alert(error);
+      }
+    })();
+  }, [socket.connected]);
+
+  const refreshStatus = async () => {
+    try {
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/sos_accepted_count/${user.user_id}`
+      );
+      setAccepted_count(data);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  const Is_SOS = async () => {
+    try {
+      const user = await JSON.parse(await AsyncStorage.getItem("user"));
+      const { data } = await axios.get(
+        `${SERVER_URL}/api/is_sos/${user.user_id}`
+      );
+      setIsSOS(data);
+    } catch (error) {
+      console.log(error);
+      alert(error);
+    }
+  };
+
+  useEffect(() => {
+    Is_SOS();
+  }, [socket.connected]);
 
   const playSound = async () => {
     const { sound } = await Audio.Sound.createAsync(
@@ -43,6 +98,67 @@ const SOS = () => {
     return sound ? () => sound.unloadAsync() : undefined;
   }, [sound]);
 
+  const SendSMS = (emergency_contact, message) => {
+    SMS.sendSMSAsync(emergency_contact, message).catch((err) =>
+      console.error(err)
+    );
+  };
+
+  const OnSOS = async (description) => {
+    if (!isSocketConnected) return;
+    setIsSOS(!isSOS);
+    const { emergency_contact } = User;
+    if (isSOS) {
+      setAccepted_count("0");
+      return socket.emit("SOS_Cancel", (data) => {
+        if (data.err) return alert(data.msg);
+        const message = `I am ${data} and I am not in danger anymore.`;
+        SendSMS(emergency_contact, message);
+      });
+    }
+    socket.emit("On_SOS", description, (data) => {
+      if (data.err) return alert(data.msg);
+      const message = `I am ${
+        data.name
+      } and I am in danger. Please help me. My location is https://www.google.com/maps/search/?api=1&query=${
+        data.coordinates.latitude
+      },${data.coordinates.longitude}.\n Send at ${new Date(
+        data.time
+      ).toLocaleString()}`;
+      SendSMS(emergency_contact, message);
+    });
+  };
+
+  useEffect(() => {
+    const subscription = Accelerometer.addListener((accelerometerData) => {
+      const { x, y, z } = accelerometerData;
+      const acceleration = Math.sqrt(x * x + y * y + z * z);
+      const now = Date.now();
+
+      if (acceleration > 1.2) {
+        if (!isShaking) {
+          setIsShaking(true);
+          setShakeCount(1);
+          setLastShakeTimestamp(now);
+        } else if (shakeCount < 6 && now - lastShakeTimestamp < 500) {
+          setShakeCount(shakeCount + 1);
+          setLastShakeTimestamp(now);
+        } else if (shakeCount >= 6) {
+          setIsShaking(false);
+          setShakeCount(0);
+          setLastShakeTimestamp(0);
+          if (!isSOS) return OnSOS("general");
+        }
+      } else {
+        setIsShaking(false);
+        setShakeCount(0);
+        setLastShakeTimestamp(0);
+      }
+    });
+    Accelerometer.setUpdateInterval(16);
+    return () => subscription.remove();
+  }, [isShaking, shakeCount, lastShakeTimestamp]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.pseduo}>
@@ -52,7 +168,7 @@ const SOS = () => {
             parseInt(accepted_count) > "0" &&
             `(${accepted_count} Accepted)`}
         </Text>
-        <TouchableOpacity onPress={null}>
+        <TouchableOpacity onPress={refreshStatus}>
           <Image
             source={require("../../assets/icons/reload.png")}
             resizeMode="contain"
@@ -84,7 +200,10 @@ const SOS = () => {
             padding: 15,
           }}
         >
-          <TouchableOpacity style={CommonStyles.sosButton} onPress={null}>
+          <TouchableOpacity
+            style={styles.sosButton}
+            onPress={() => OnSOS("general")}
+          >
             <Text style={styles.buttonText}>{isSOS ? "Cancel" : "SOS"}</Text>
           </TouchableOpacity>
         </View>
@@ -101,7 +220,7 @@ const SOS = () => {
             style={{
               ...styles.additionalSosButton,
             }}
-            onPress={null}
+            onPress={() => OnSOS("accident")}
           >
             <Image
               source={require("../../assets/icons/accident.png")}
@@ -113,7 +232,7 @@ const SOS = () => {
             style={{
               ...styles.additionalSosButton,
             }}
-            onPress={null}
+            onPress={() => OnSOS("medical")}
           >
             <Image
               source={require("../../assets/icons/ambulance.png")}
@@ -145,13 +264,12 @@ const SOS = () => {
               justifyContent: "center",
               marginVertical: 5,
             }}
-            onPress={async () => {
-              const User = await JSON.parse(await AsyncStorage.getItem("user"));
+            onPress={() =>
               call({
                 number: User.emergency_contact[0],
                 prompt: true,
-              }).catch(console.error);
-            }}
+              }).catch(console.error)
+            }
           >
             <Text style={styles.onlySosButtonText}>Emergency Call</Text>
           </TouchableOpacity>
@@ -194,14 +312,14 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 40,
-    fontFamily: CommonStyles.bold.fontFamily,
+    fontFamily: Styles.bold.fontFamily,
   },
   onlySosButtonText: {
     color: "#fff",
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 15,
-    fontFamily: CommonStyles.medium.fontFamily,
+    fontFamily: Styles.medium.fontFamily,
   },
   onlySosButton: {
     marginBottom: 0,
@@ -243,7 +361,7 @@ const styles = StyleSheet.create({
   pseduoText: {
     color: "#fff",
     fontSize: 15,
-    fontFamily: CommonStyles.bold.fontFamily,
+    fontFamily: Styles.bold.fontFamily,
   },
 });
 
