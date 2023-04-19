@@ -43,11 +43,12 @@ const Complaints = () => {
                 </Text>
                 <Group mt={15} spacing="xl" grow>
                   <Button
+                    color="pink"
                     size={"xs"}
-                    variant="outline"
+                    // variant="outline"
                     // onClick={() => GetDirection(item.user._id)}
                   >
-                    Resolved
+                    Resolve
                   </Button>
                 </Group>
               </Card>
