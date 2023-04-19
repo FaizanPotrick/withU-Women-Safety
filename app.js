@@ -32,6 +32,7 @@ app.use("/api", require("./routes/User"));
 app.use("/api", require("./routes/Active"));
 app.use("/api", require("./routes/SOS"));
 app.use("/api", require("./routes/Story"));
+app.use("/api", require("./routes/AnonymousAlert"));
 app.get("/api/chatbot/:message", async (req, res) => {
   const { message } = req.params;
   const response = await test_model(message);
