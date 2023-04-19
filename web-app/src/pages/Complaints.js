@@ -1,28 +1,27 @@
 import { Card, Text, Badge, Group, Grid, Button } from "@mantine/core";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { SERVER_URL } from "../config";
 
 const Complaints = () => {
-  const [alertList, setAlertList] = useState([
-    {
-      _id: "60f1b1b0b0b5a40015b0b0b0",
-      name: "John Doe",
-      Type_of_complaint: "Theft",
-      description: "Theft of my phone",
-    },
+  const [alertList, setAlertList] = useState([]);
 
-    {
-      _id: "60f1b1b0b0b5a40015b0b0b0",
-      name: "John Doe",
-      Type_of_complaint: "Theft",
-      description: "Theft of my phone",
-    },
-  ]);
-
+  useEffect(() => {
+    const Fetch_Alert = async () => {
+      try {
+        const { data } = await axios.get(`${SERVER_URL}/api/anonymous_alert`);
+        setAlertList(data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    Fetch_Alert();
+  }, []);
   return (
     <div>
       <Grid gutterXl={30}>
         {alertList.map((item, index) => {
-          const { Type_of_complaint, description } = item;
+          const { type, description } = item;
 
           return (
             <Grid.Col span={4} key={index}>
@@ -31,7 +30,7 @@ const Complaints = () => {
                   Anonymous
                 </Text>
                 <Text fz="sm" c="dimmed" mt={5}>
-                  Type : {Type_of_complaint}
+                  Type : {type}
                 </Text>
                 <Text
                   c="dimmed"
@@ -46,7 +45,6 @@ const Complaints = () => {
                     color="pink"
                     size={"xs"}
                     // variant="outline"
-                    // onClick={() => GetDirection(item.user._id)}
                   >
                     Resolve
                   </Button>
